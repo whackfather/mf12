@@ -1,5 +1,7 @@
 #include <Arduino.h>
 
+float compression(int, float);
+
 void setup() {
   Serial.begin(9600);
 }
