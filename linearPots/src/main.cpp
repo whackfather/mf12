@@ -1,4 +1,12 @@
+#define _USE_MATH_DEFINES
 #include <Arduino.h>
+#include <cmath>
+
+// Adjust the following values to match real world
+const float sigma = 85 * (M_PI / 180);
+const float a = 10, b = 10, c = 20;
+
+float length(int, float);
 
 void setup() {
   Serial.begin(9600);
@@ -6,12 +14,20 @@ void setup() {
 
 void loop() {
   float rawVal = analogRead(A0); // Change pin value to reflect testing environment
-  float compMm = compression(3, rawVal);
-  Serial.println(compMm);
+  float potLen = length(3, rawVal);
+  float potSqrd = potLen * potLen;
+  
+  float phi = acos(((c * c) - potSqrd - (a * a)) / (-2 * potLen * a));
+  float theta = sigma - phi;
+  float susSqrd = potSqrd + (b * b) - (2 * potLen * b * cos(theta));
+  float susLen = sqrt(susSqrd);
+
+  Serial.println(susLen);
+
   delay(100);
 }
 
-float compression(int wheel, float rawVal) {
+float length(int wheel, float rawVal) {
   switch(wheel) {
     case 1: // Front pot 1
       return ((79.0f / 1018.0f) * rawVal) - (79.0f / 1018.0f);
