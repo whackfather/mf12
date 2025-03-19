@@ -8,6 +8,8 @@ const float a = 10, b = 10, c = 20;
 
 float length(int, float);
 
+float compression(int, float);
+
 void setup() {
   Serial.begin(9600);
 }
