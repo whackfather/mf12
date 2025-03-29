@@ -6,7 +6,7 @@
 
 // Global constants
 const int wheelNum = 3;
-// Refer to trigonometry diagram to identify these
+// Refer to trigonometry diagram to identify the following
 const float a = 2.4f;
 const float b = 3.01f;
 const float c = 7.08f;
