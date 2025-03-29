@@ -1,10 +1,12 @@
 // Linear Potentiometer Test Code
-// Written by Roman Rodrigez
+// Written by Roman Rodriguez
 
 // Include statements
 #include <Arduino.h>
 
 // Global constants
+const int wheelNum = 3;
+// Refer to trigonometry diagram to identify these
 const float a = 2.4f;
 const float b = 3.01f;
 const float c = 7.08f;
@@ -22,8 +24,13 @@ void setup() {
 // MAIN LOOP
 void loop() {
   float rawVal = analogRead(A0); // Change pin value to reflect testing environment
-  float potLen = length(3, rawVal);
-  float susLen = suspensionLength(potLen);
+  float potLen = length(wheelNum, rawVal);
+  float susLen = 0;
+  if (wheelNum == 1 || wheelNum == 2) {
+    susLen = potLen;
+  } else if (wheelNum == 3 || wheelNum == 4) {
+    susLen = suspensionLength(potLen);
+  }
   Serial.println(susLen);
   delay(100);
 }
@@ -32,19 +39,20 @@ void loop() {
 float length(int wheel, float rawVal) {
   switch(wheel) {
     case 1: // Front Left Pot
-      return (((79.0f / 1018.0f) * rawVal) - (79.0f / 1018.0f)) / 25.4;
+      return ((((79.0f / 1018.0f) * rawVal) - (79.0f / 1018.0f)) + 194) / 25.4f;
     case 2: // Front Right Pot
-      return (((78.81f / 1020.0f) * rawVal) - (78.81f / 1020.0f)) / 25.4;
+      return ((((78.81f / 1020.0f) * rawVal) - (78.81f / 1020.0f))  + 194) / 25.4f;
     case 3: // Rear Left Pot
-      return ((((-76.0f / 1023.0f) * rawVal) + 76) + 223) / 25.4;
+      return (250.5075f - (((-76.0f / 1023.0f) * rawVal) + 76)) / 25.4f;
     case 4: // Rear Right Pot
-      return ((((-76.0f / 1023.0f) * rawVal) + 76) + 223) / 25.4;  // Same equations as rear pot 1, hopefully its fine
+      return (250.5075f - (((-76.0f / 1023.0f) * rawVal) + 76)) / 25.4f;  // Same equations as rear pot 1, hopefully its fine
   }
 
-  return -1;
+  // This should break stuff if you somehow put a number not 1-4 for the wheel number
+  return -1.0f;
 }
 
-// Gets length of suspension given length of potentiometer
+// Gets length of REAR (IN THE BACK NOT THE FRONT) suspension given length of potentiometer
 float suspensionLength(float p) {
   float aSqrd = a * a;
   float bSqrd = b * b;
